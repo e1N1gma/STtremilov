@@ -1,0 +1,731 @@
+<!DOCTYPE html>
+<html lang="ru">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>ManagerIT — Онлайн обучение</title>
+
+  <!-- Стили -->
+  <link rel="stylesheet" href="css/main.css" />
+  <link href="https://fonts.googleapis.com/css2?family=Ubuntu:wght@300;400;700&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Open+Sans&display=swap" rel="stylesheet">
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.css" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css"/>
+
+  <style>
+    /* Дополнительные стили для уведомлений */
+    .notification {
+        position: fixed;
+        top: 20px;
+        right: 20px;
+        background: white;
+        border-left: 4px solid #4CAF50;
+        box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+        padding: 16px 24px;
+        border-radius: 8px;
+        z-index: 10000;
+        font-family: 'Ubuntu', sans-serif;
+        animation: slideIn 0.3s ease-out;
+    }
+    
+    .notification.error {
+        border-left-color: #f44336;
+    }
+    
+    @keyframes slideIn {
+        from {
+            transform: translateX(100%);
+            opacity: 0;
+        }
+        to {
+            transform: translateX(0);
+            opacity: 1;
+        }
+    }
+    
+    .notification button {
+        background: none;
+        border: none;
+        font-size: 20px;
+        cursor: pointer;
+        float: right;
+        margin-left: 16px;
+        color: #999;
+    }
+    
+    /* Стили для модального окна */
+    .modal-overlay {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background: rgba(0,0,0,0.5);
+        z-index: 9999;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        animation: fadeIn 0.3s ease-out;
+    }
+    
+    .modal-content {
+        background: white;
+        border-radius: 16px;
+        padding: 32px;
+        max-width: 500px;
+        width: 90%;
+        text-align: center;
+        animation: slideUp 0.3s ease-out;
+    }
+    
+    @keyframes fadeIn {
+        from { opacity: 0; }
+        to { opacity: 1; }
+    }
+    
+    @keyframes slideUp {
+        from {
+            transform: translateY(50px);
+            opacity: 0;
+        }
+        to {
+            transform: translateY(0);
+            opacity: 1;
+        }
+    }
+    
+    .modal-content h3 {
+        margin-bottom: 16px;
+        color: #333;
+    }
+    
+    .modal-content p {
+        margin-bottom: 24px;
+        color: #666;
+    }
+    
+    .modal-close {
+        background: #4CAF50;
+        color: white;
+        border: none;
+        padding: 10px 24px;
+        border-radius: 8px;
+        cursor: pointer;
+        font-size: 16px;
+        transition: background 0.3s;
+    }
+    
+    .modal-close:hover {
+        background: #45a049;
+    }
+    
+    /* Курсор для карточек */
+    .card-python, .card-js, .card-java, .card-frontend, 
+    .card-datascience, .card-devops, .card-ios, .card-android, 
+    .card-qa, .card-golang, .card-design, .card-cpp {
+        cursor: pointer;
+        transition: transform 0.3s, box-shadow 0.3s;
+    }
+    
+    .card-python:hover, .card-js:hover, .card-java:hover, 
+    .card-frontend:hover, .card-datascience:hover, .card-devops:hover, 
+    .card-ios:hover, .card-android:hover, .card-qa:hover, 
+    .card-golang:hover, .card-design:hover, .card-cpp:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 8px 20px rgba(0,0,0,0.15);
+    }
+  </style>
+</head>
+
+<body>
+
+    <div class="wrapper">
+        <header class="header">
+            <div class="container offer">
+                <div class="header__left">
+                    
+                    <!-- Лого -->
+                    <div class="logo-block">
+                        <h2 class="LOGO222">Manager IT</h2>
+                    </div>
+                    
+                    <div class="text">
+                        <p class="text1 animate__animated animate__fadeInUp">
+                            <span>ОНЛАЙН-КУРСЫ НА ЛЮБОЙ ВКУС ПО IT СФЕРЕ</span>
+                        </p>
+                        
+                        <!-- Краткая инфа -->
+                        <ul class="features-list">
+                            <li class="text2"><span>Обучение программированию и дизайну с нуля</span></li>
+                            <li class="text2"><span>Практика и реальные проекты</span></li>
+                            <li class="text2"><span>Поддержка наставников 24/7</span></li>
+                            <li class="text2"><span>Сертификаты после окончания</span></li>
+                        </ul>
+                        
+                        <button class="btn1" id="startLearningBtn">НАЧАТЬ ОБУЧЕНИЕ</button>
+                    </div>
+                    
+                </div>
+            </div>
+        </header>
+    </div>
+
+    <!-- Блок с курсами -->
+    <h2 class="heading">Курсы которые мы предлагаем</h2> <br><br>
+
+    <div class="cards-grid">
+
+        <!-- 1. Python -->
+        <div class="card-python" data-course="Python-разработчик" data-duration="10 месяцев" data-description="Освойте Django, FastAPI и парсинг данных. Научитесь создавать бэкенд для сайтов и телеграм-ботов.">
+            <div class="content">
+                <div class="brief">
+                    <span class="badge">Профессия</span>
+                    <h3>Python-разработчик</h3>
+                    <div class="info">10 месяцев · с трудоустройством</div>
+                </div>
+                <div class="full">
+                    <span class="badge">Профессия</span>
+                    <h3>Python-разработчик</h3>
+                    <div class="info">10 месяцев · с трудоустройством</div>
+                    <div class="divider"></div>
+                    <div class="description">Освойте Django, FastAPI и парсинг данных. Научитесь создавать бэкенд для сайтов и телеграм-ботов.</div>
+                    <ul class="features"><li>4 проекта в портфолио</li><li>Работа с базами данных</li><li>Помощь с трудоустройством</li></ul>
+                </div>
+            </div>
+        </div>
+
+        <!-- 2. JavaScript -->
+        <div class="card-js" data-course="JavaScript-разработчик" data-duration="8 месяцев" data-description="Изучите React, Node.js и TypeScript. Создавайте современные веб-приложения и мобильные приложения на React Native.">
+            <div class="content">
+                <div class="brief">
+                    <span class="badge">Профессия</span>
+                    <h3>JavaScript-разработчик</h3>
+                    <div class="info">8 месяцев · с трудоустройством</div>
+                </div>
+                <div class="full">
+                    <span class="badge">Профессия</span>
+                    <h3>JavaScript-разработчик</h3>
+                    <div class="info">8 месяцев · с трудоустройством</div>
+                    <div class="divider"></div>
+                    <div class="description">Изучите React, Node.js и TypeScript. Создавайте современные веб-приложения и мобильные приложения на React Native.</div>
+                    <ul class="features"><li>5 проектов в портфолио</li><li>Fullstack разработка</li><li>Стажировка в IT-компании</li></ul>
+                </div>
+            </div>
+        </div>
+
+        <!-- 3. Java -->
+        <div class="card-java" data-course="Java-разработчик" data-duration="12 месяцев" data-description="Освойте Spring Boot, Hibernate и микросервисы. Разрабатывайте корпоративные приложения и Android-приложения.">
+            <div class="content">
+                <div class="brief">
+                    <span class="badge">Профессия</span>
+                    <h3>Java-разработчик</h3>
+                    <div class="info">12 месяцев · с трудоустройством</div>
+                </div>
+                <div class="full">
+                    <span class="badge">Профессия</span>
+                    <h3>Java-разработчик</h3>
+                    <div class="info">12 месяцев · с трудоустройством</div>
+                    <div class="divider"></div>
+                    <div class="description">Освойте Spring Boot, Hibernate и микросервисы. Разрабатывайте корпоративные приложения и Android-приложения.</div>
+                    <ul class="features"><li>3 enterprise-проекта</li><li>Работа с большими данными</li><li>Трудоустройство в топ-компании</li></ul>
+                </div>
+            </div>
+        </div>
+
+        <!-- 4. Frontend -->
+        <div class="card-frontend" data-course="Frontend-разработчик" data-duration="7 месяцев" data-description="Изучите React, Vue.js и современный CSS. Создавайте красивые и быстрые интерфейсы для сайтов и веб-приложений.">
+            <div class="content">
+                <div class="brief">
+                    <span class="badge">Профессия</span>
+                    <h3>Frontend-разработчик</h3>
+                    <div class="info">7 месяцев · с трудоустройством</div>
+                </div>
+                <div class="full">
+                    <span class="badge">Профессия</span>
+                    <h3>Frontend-разработчик</h3>
+                    <div class="info">7 месяцев · с трудоустройством</div>
+                    <div class="divider"></div>
+                    <div class="description">Изучите React, Vue.js и современный CSS. Создавайте красивые и быстрые интерфейсы для сайтов и веб-приложений.</div>
+                    <ul class="features"><li>6 готовых сайтов в портфолио</li><li>Адаптивная вёрстка</li><li>Помощь с поиском работы</li></ul>
+                </div>
+            </div>
+        </div>
+
+        <!-- 5. Data Scientist -->
+        <div class="card-datascience" data-course="Data Scientist" data-duration="11 месяцев" data-description="Освойте pandas, numpy, scikit-learn и TensorFlow. Научитесь строить модели машинного обучения и анализировать данные.">
+            <div class="content">
+                <div class="brief">
+                    <span class="badge">Профессия</span>
+                    <h3>Data Scientist</h3>
+                    <div class="info">11 месяцев · с трудоустройством</div>
+                </div>
+                <div class="full">
+                    <span class="badge">Профессия</span>
+                    <h3>Data Scientist</h3>
+                    <div class="info">11 месяцев · с трудоустройством</div>
+                    <div class="divider"></div>
+                    <div class="description">Освойте pandas, numpy, scikit-learn и TensorFlow. Научитесь строить модели машинного обучения и анализировать данные.</div>
+                    <ul class="features"><li>5 проектов с реальными данными</li><li>Визуализация данных</li><li>Помощь с трудоустройством</li></ul>
+                </div>
+            </div>
+        </div>
+
+        <!-- 6. DevOps -->
+        <div class="card-devops" data-course="DevOps-инженер" data-duration="9 месяцев" data-description="Освойте Docker, Kubernetes, CI/CD пайплайны и облачные технологии. Настройте автоматизацию развертывания приложений.">
+            <div class="content">
+                <div class="brief">
+                    <span class="badge">Профессия</span>
+                    <h3>DevOps-инженер</h3>
+                    <div class="info">9 месяцев · с трудоустройством</div>
+                </div>
+                <div class="full">
+                    <span class="badge">Профессия</span>
+                    <h3>DevOps-инженер</h3>
+                    <div class="info">9 месяцев · с трудоустройством</div>
+                    <div class="divider"></div>
+                    <div class="description">Освойте Docker, Kubernetes, CI/CD пайплайны и облачные технологии. Настройте автоматизацию развертывания приложений.</div>
+                    <ul class="features"><li>Работа с AWS/GCP</li><li>Мониторинг и логирование</li><li>Трудоустройство в топ-компании</li></ul>
+                </div>
+            </div>
+        </div>
+
+        <!-- 7. iOS -->
+        <div class="card-ios" data-course="iOS-разработчик" data-duration="10 месяцев" data-description="Освойте Swift, UIKit и SwiftUI. Создавайте приложения для iPhone и iPad и публикуйте их в App Store.">
+            <div class="content">
+                <div class="brief">
+                    <span class="badge">Профессия</span>
+                    <h3>iOS-разработчик</h3>
+                    <div class="info">10 месяцев · с трудоустройством</div>
+                </div>
+                <div class="full">
+                    <span class="badge">Профессия</span>
+                    <h3>iOS-разработчик</h3>
+                    <div class="info">10 месяцев · с трудоустройством</div>
+                    <div class="divider"></div>
+                    <div class="description">Освойте Swift, UIKit и SwiftUI. Создавайте приложения для iPhone и iPad и публикуйте их в App Store.</div>
+                    <ul class="features"><li>4 приложения в портфолио</li><li>Публикация в App Store</li><li>Помощь с трудоустройством</li></ul>
+                </div>
+            </div>
+        </div>
+
+        <!-- 8. Android -->
+        <div class="card-android" data-course="Android-разработчик" data-duration="10 месяцев" data-description="Освойте Kotlin, Jetpack Compose и архитектуру Android. Создавайте приложения для Google Play.">
+            <div class="content">
+                <div class="brief">
+                    <span class="badge">Профессия</span>
+                    <h3>Android-разработчик</h3>
+                    <div class="info">10 месяцев · с трудоустройством</div>
+                </div>
+                <div class="full">
+                    <span class="badge">Профессия</span>
+                    <h3>Android-разработчик</h3>
+                    <div class="info">10 месяцев · с трудоустройством</div>
+                    <div class="divider"></div>
+                    <div class="description">Освойте Kotlin, Jetpack Compose и архитектуру Android. Создавайте приложения для Google Play.</div>
+                    <ul class="features"><li>4 приложения в портфолио</li><li>Публикация в Google Play</li><li>Помощь с трудоустройством</li></ul>
+                </div>
+            </div>
+        </div>
+
+        <!-- 9. QA -->
+        <div class="card-qa" data-course="QA-инженер" data-duration="6 месяцев" data-description="Освойте ручное и автоматизированное тестирование. Научитесь находить баги и писать тест-кейсы.">
+            <div class="content">
+                <div class="brief">
+                    <span class="badge">Профессия</span>
+                    <h3>QA-инженер</h3>
+                    <div class="info">6 месяцев · с трудоустройством</div>
+                </div>
+                <div class="full">
+                    <span class="badge">Профессия</span>
+                    <h3>QA-инженер</h3>
+                    <div class="info">6 месяцев · с трудоустройством</div>
+                    <div class="divider"></div>
+                    <div class="description">Освойте ручное и автоматизированное тестирование. Научитесь находить баги и писать тест-кейсы.</div>
+                    <ul class="features"><li>Selenium и Postman</li><li>Тест-дизайн и баг-трекинг</li><li>Стажировка в IT-компании</li></ul>
+                </div>
+            </div>
+        </div>
+
+        <!-- 10. Golang -->
+        <div class="card-golang" data-course="Golang-разработчик" data-duration="9 месяцев" data-description="Освойте высокопроизводительный язык от Google. Создавайте бэкенд для высоконагруженных систем и микросервисов.">
+            <div class="content">
+                <div class="brief">
+                    <span class="badge">Профессия</span>
+                    <h3>Golang-разработчик</h3>
+                    <div class="info">9 месяцев · с трудоустройством</div>
+                </div>
+                <div class="full">
+                    <span class="badge">Профессия</span>
+                    <h3>Golang-разработчик</h3>
+                    <div class="info">9 месяцев · с трудоустройством</div>
+                    <div class="divider"></div>
+                    <div class="description">Освойте высокопроизводительный язык от Google. Создавайте бэкенд для высоконагруженных систем и микросервисов.</div>
+                    <ul class="features"><li>Конкурентное программирование</li><li>Разработка API и микросервисов</li><li>Трудоустройство в топ-компании</li></ul>
+                </div>
+            </div>
+        </div>
+
+        <!-- 11. UX/UI Designer -->
+        <div class="card-design" data-course="UX/UI-дизайнер" data-duration="7 месяцев" data-description="Освойте Figma, прототипирование и дизайн-мышление. Создавайте удобные интерфейсы для сайтов и приложений.">
+            <div class="content">
+                <div class="brief">
+                    <span class="badge">Профессия</span>
+                    <h3>UX/UI-дизайнер</h3>
+                    <div class="info">7 месяцев · с трудоустройством</div>
+                </div>
+                <div class="full">
+                    <span class="badge">Профессия</span>
+                    <h3>UX/UI-дизайнер</h3>
+                    <div class="info">7 месяцев · с трудоустройством</div>
+                    <div class="divider"></div>
+                    <div class="description">Освойте Figma, прототипирование и дизайн-мышление. Создавайте удобные интерфейсы для сайтов и приложений.</div>
+                    <ul class="features"><li>5 дизайн-проектов в портфолио</li><li>Анимация интерфейсов</li><li>Помощь с трудоустройством</li></ul>
+                </div>
+            </div>
+        </div>
+
+        <!-- 12. C++ Developer -->
+        <div class="card-cpp" data-course="C++ разработчик" data-duration="12 месяцев" data-description="Освойте C++17/20, STL и многопоточность. Разрабатывайте игры, высокопроизводительные системы и драйверы.">
+            <div class="content">
+                <div class="brief">
+                    <span class="badge">Профессия</span>
+                    <h3>C++ разработчик</h3>
+                    <div class="info">12 месяцев · с трудоустройством</div>
+                </div>
+                <div class="full">
+                    <span class="badge">Профессия</span>
+                    <h3>C++ разработчик</h3>
+                    <div class="info">12 месяцев · с трудоустройством</div>
+                    <div class="divider"></div>
+                    <div class="description">Освойте C++17/20, STL и многопоточность. Разрабатывайте игры, высокопроизводительные системы и драйверы.</div>
+                    <ul class="features"><li>Игровой движок на C++</li><li>Оптимизация производительности</li><li>Трудоустройство в топ-компании</li></ul>
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+    <!-- Блок преимуществ -->
+    <br>
+    <div class="main-wrapper">
+        
+        <!-- Заголовок -->
+        <div class="main-header">
+            <h2 class="main-title">Почему выбирают нас?</h2>
+        </div>
+        
+        <!-- Сетка с преимуществами -->
+        <div class="advantages-container">
+            
+            <!-- Блок 1 -->
+            <div class="advantage-card">
+                <div class="advantage-icon">💰</div>
+                <div class="advantage-title">Вернём деньги, если не найдёте работу</div>
+                <div class="advantage-description">Это зафиксировано юридически. Подробнее в Условиях возврата.</div>
+            </div>
+            
+            <!-- Блок 2 -->
+            <div class="advantage-card">
+                <div class="advantage-icon">📁</div>
+                <div class="advantage-title">Реальные проекты в портфолио</div>
+                <div class="advantage-description">Выполните 5+ проектов для демонстрации работодателю</div>
+            </div>
+            
+            <!-- Блок 3 -->
+            <div class="advantage-card">
+                <div class="advantage-icon">👨‍🏫</div>
+                <div class="advantage-title">Поддержка наставников 24/7</div>
+                <div class="advantage-description">Помощь с любыми вопросами в любое время суток</div>
+            </div>
+            
+            <!-- Блок 4 -->
+            <div class="advantage-card">
+                <div class="advantage-icon">🌍</div>
+                <div class="advantage-title">Международный диплом</div>
+                <div class="advantage-description">Документ, который ценят работодатели по всему миру</div>
+            </div>
+            
+            <!-- Блок 5 -->
+            <div class="advantage-card">
+                <div class="advantage-icon">⏰</div>
+                <div class="advantage-title">Свободный график без дедлайнов</div>
+                <div class="advantage-description">Обучение легко совмещать с работой и личной жизнью</div>
+            </div>
+            
+            <!-- Блок 6 -->
+            <div class="advantage-card">
+                <div class="advantage-icon">📜</div>
+                <div class="advantage-title">Сертификат после окончания</div>
+                <div class="advantage-description">Подтверждение квалификации для работодателей</div>
+            </div>
+            
+            <!-- Блок 7 -->
+            <div class="advantage-card">
+                <div class="advantage-icon">🔓</div>
+                <div class="advantage-title">Бессрочный доступ к курсу и обновлениям</div>
+                <div class="advantage-description">Можно вернуться к занятиям и освежить знания в любой момент</div>
+            </div>
+            
+            <!-- Блок 8 -->
+            <div class="advantage-card">
+                <div class="advantage-icon">💼</div>
+                <div class="advantage-title">Помощь с трудоустройством</div>
+                <div class="advantage-description">Поможем составить резюме и подготовиться к собеседованию</div>
+            </div>
+            
+        </div>
+        
+        <!-- Разделитель -->
+        <div class="divider"></div>
+        
+        <!-- Блок с вебинаром -->
+        <div class="webinar-wrapper">
+            <div class="webinar-container">
+                <h3 class="webinar-title">Запишитесь на бесплатный вебинар</h3>
+                <form class="webinar-form" id="webinarForm">
+                    <input type="email" class="webinar-input" placeholder="Ваш email" id="webinarEmail" required>
+                    <button type="submit" class="webinar-button">Записаться</button>
+                </form>
+            </div>
+        </div>
+        
+    </div>
+
+    <!-- Блок с отзывами -->
+    <div class="container">
+    <h2 class="heading">Отзывы наших студентов</h2>
+    <div class="blocks">
+        <div class="block-item">
+        <img src="img/User1.png" alt="Отзыв 1" style="border-radius: 50%; width: 80px; height: 80px;">
+        <h3>Кирилл А.</h3>
+        <p>«Раньше думал, что онлайн-курсы — это просто записи лекций. Но здесь я реально прошёл полную программу по разработке, с проверкой кода и живыми вебинарами. Диплом на руках — теперь чувствую себя уверенно на собеседованиях.»</p>
+        </div>
+        <div class="block-item">
+        <img src="img/User2.png" alt="Отзыв 2" style="border-radius: 50%; width: 80px; height: 80px;">
+        <h3>Никита А.</h3>
+        <p>«Закончил обучение на инженера по тестированию. Всё онлайн, но без ощущения "один перед экраном". Кураторы довели до результата, финальный проект защитил. Теперь официально в IT!»</p>
+        </div>
+        <div class="block-item">
+        <img src="img/User3.png" alt="Отзыв 3" style="border-radius: 50%; width: 80px; height: 80px;">
+        <h3>Дмитрий С.</h3>
+        <p>«Успешно завершил полный курс по IT для начинающих. С нуля изучил базы данных и Python, сдал итоговый экзамен. Онлайн-формат оказался очень эффективным, если выбрать нормальную школу. Рекомендую!»</p>
+        </div>
+    </div>
+    </div>
+
+    <!-- Тех поддержка -->
+    <div class="support-wrapper">
+        <div class="support-container">
+            
+            <!-- Заголовок -->
+            <div class="support-header">
+                <div class="support-icon">🎧</div>
+                <h2 class="support-title">Связь с техподдержкой</h2>
+                <p class="support-subtitle">Мы поможем решить любой вопрос</p>
+            </div>
+            
+            <!-- Форма -->
+            <form class="support-form" id="supportForm">
+                <div class="form-row">
+                    <div class="form-group">
+                        <input type="email" class="form-input" id="supportEmail" placeholder="Ваш email" required>
+                    </div>
+                </div>
+                <div class="form-row">
+                    <div class="form-group">
+                        <input type="text" class="form-input" id="supportSubject" placeholder="Тема обращения" required>
+                    </div>
+                </div>
+                <div class="form-row">
+                    <div class="form-group">
+                        <textarea class="form-textarea" id="supportMessage" placeholder="Опишите вашу проблему..." rows="5"></textarea>
+                    </div>
+                </div>
+                <button type="submit" class="support-button">Отправить</button>
+            </form>
+            
+            <!-- Дополнительные контакты -->
+            <div class="support-contacts">
+                <div class="contacts-grid">
+                    <div class="contact-item">
+                        <span class="contact-icon">📞</span>
+                        <span>8 (800) 123-45-67</span>
+                    </div>
+                    <div class="contact-item">
+                        <span class="contact-icon">💬</span>
+                        <span>Telegram: @support_help</span>
+                    </div>
+                    <div class="contact-item">
+                        <span class="contact-icon">⏰</span>
+                        <span>24/7 — отвечаем в течение 10 минут</span>
+                    </div>
+                </div>
+            </div>
+            
+        </div>
+    </div>
+
+    <!-- Подвал -->
+    <footer class="footer-copyright">
+      <p class="footer-copyright__text">
+        © 2026 MANAGER IT — Все права защищены
+      </p>
+    </footer>
+
+    <!-- JavaScript для работы кнопок -->
+    <script>
+        // Функция для показа уведомлений
+        function showNotification(message, isError = false) {
+            const notification = document.createElement('div');
+            notification.className = 'notification' + (isError ? ' error' : '');
+            notification.innerHTML = `
+                <button onclick="this.parentElement.remove()">×</button>
+                <strong>${isError ? '❌ Ошибка' : '✅ Успех'}</strong><br>
+                ${message}
+            `;
+            document.body.appendChild(notification);
+            
+            // Автоматически скрыть через 5 секунд
+            setTimeout(() => {
+                if (notification && notification.remove) {
+                    notification.remove();
+                }
+            }, 5000);
+        }
+        
+        // Функция для показа модального окна
+        function showModal(title, message) {
+            const modal = document.createElement('div');
+            modal.className = 'modal-overlay';
+            modal.innerHTML = `
+                <div class="modal-content">
+                    <h3>${title}</h3>
+                    <p>${message}</p>
+                    <button class="modal-close">Закрыть</button>
+                </div>
+            `;
+            document.body.appendChild(modal);
+            
+            modal.querySelector('.modal-close').onclick = () => modal.remove();
+            modal.onclick = (e) => {
+                if (e.target === modal) modal.remove();
+            };
+        }
+        
+        // 1. Кнопка "НАЧАТЬ ОБУЧЕНИЕ" - скролл к форме вебинара
+        const startBtn = document.getElementById('startLearningBtn');
+        if (startBtn) {
+            startBtn.addEventListener('click', function(e) {
+                e.preventDefault();
+                const webinarSection = document.querySelector('.webinar-wrapper');
+                if (webinarSection) {
+                    webinarSection.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                    showNotification('📝 Заполните форму ниже, чтобы начать обучение!');
+                } else {
+                    showNotification('Форма не найдена', true);
+                }
+            });
+        }
+        
+        // 2. Форма записи на вебинар
+        const webinarForm = document.getElementById('webinarForm');
+        if (webinarForm) {
+            webinarForm.addEventListener('submit', function(e) {
+                e.preventDefault();
+                const emailInput = document.getElementById('webinarEmail');
+                const email = emailInput.value.trim();
+                
+                if (!email) {
+                    showNotification('Пожалуйста, введите email', true);
+                    return;
+                }
+                
+                if (!email.includes('@') || !email.includes('.')) {
+                    showNotification('Пожалуйста, введите корректный email', true);
+                    return;
+                }
+                
+                // Сохраняем в localStorage для демонстрации
+                const subscribers = JSON.parse(localStorage.getItem('webinarSubscribers') || '[]');
+                subscribers.push({ email, date: new Date().toISOString() });
+                localStorage.setItem('webinarSubscribers', JSON.stringify(subscribers));
+                
+                showModal('✅ Вы записаны на вебинар!', 
+                    `На почту ${email} отправлена инструкция по подключению. Ждите письмо в течение 5 минут.`);
+                emailInput.value = '';
+            });
+        }
+        
+        // 3. Форма техподдержки
+        const supportForm = document.getElementById('supportForm');
+        if (supportForm) {
+            supportForm.addEventListener('submit', function(e) {
+                e.preventDefault();
+                const email = document.getElementById('supportEmail').value.trim();
+                const subject = document.getElementById('supportSubject').value.trim();
+                const message = document.getElementById('supportMessage').value.trim();
+                
+                if (!email || !subject || !message) {
+                    showNotification('Пожалуйста, заполните все поля', true);
+                    return;
+                }
+                
+                if (!email.includes('@') || !email.includes('.')) {
+                    showNotification('Пожалуйста, введите корректный email', true);
+                    return;
+                }
+                
+                // Сохраняем обращение
+                const tickets = JSON.parse(localStorage.getItem('supportTickets') || '[]');
+                tickets.push({
+                    email,
+                    subject,
+                    message,
+                    date: new Date().toISOString(),
+                    status: 'new'
+                });
+                localStorage.setItem('supportTickets', JSON.stringify(tickets));
+                
+                showModal('📨 Обращение отправлено!', 
+                    `Ваше обращение принято. Мы ответим на ${email} в течение 10 минут. Номер тикета: #${tickets.length}`);
+                
+                // Очищаем форму
+                document.getElementById('supportEmail').value = '';
+                document.getElementById('supportSubject').value = '';
+                document.getElementById('supportMessage').value = '';
+            });
+        }
+        
+        // 4. Клики по карточкам курсов
+        const courseCards = document.querySelectorAll('.card-python, .card-js, .card-java, .card-frontend, .card-datascience, .card-devops, .card-ios, .card-android, .card-qa, .card-golang, .card-design, .card-cpp');
+        
+        courseCards.forEach(card => {
+            card.addEventListener('click', function() {
+                const courseName = this.querySelector('h3')?.innerText || 'Курс';
+                const duration = this.querySelector('.info')?.innerText || 'не указано';
+                const description = this.querySelector('.description')?.innerText || '';
+                
+                showModal(`📚 ${courseName}`, 
+                    `Продолжительность: ${duration}\n\n${description}\n\nХотите записаться на курс? Нажмите кнопку "НАЧАТЬ ОБУЧЕНИЕ" вверху страницы!`);
+            });
+        });
+        
+        // 5. Анимация при загрузке страницы
+        document.addEventListener('DOMContentLoaded', function() {
+            console.log('Страница загружена, все кнопки работают!');
+            
+            // Показываем приветственное уведомление (только если не показывали раньше)
+            const hasVisited = localStorage.getItem('hasVisited');
+            if (!hasVisited) {
+                setTimeout(() => {
+                    showNotification('👋 Добро пожаловать в ManagerIT! Нажмите на любой курс, чтобы узнать подробности');
+                }, 1000);
+                localStorage.setItem('hasVisited', 'true');
+            }
+        });
+    </script>
+
+</body>
+</html>
